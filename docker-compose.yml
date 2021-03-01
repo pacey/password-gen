@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 services:
   password-gen-api:
     image: password-gen-api:latest
@@ -7,6 +7,11 @@ services:
       - 8080:8080
     networks:
       - internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http:localhost:8080/health"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
 
   prometheus:
     image: prom/prometheus
@@ -52,7 +57,6 @@ services:
 
   locust-worker:
     image: locustio/locust
-    container_name: locust-worker
     volumes:
       - ./locust:/mnt/locust
     command: -f /mnt/locust/locustfile.py --worker --master-host locust-master
