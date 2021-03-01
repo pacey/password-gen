@@ -18,6 +18,13 @@ class Characters {
         "NM".toCharArray()
     };
 
+    static {
+        // Sort the arrays to help searching
+        for (char[] chars : similar) {
+            Arrays.sort(chars);
+        }
+    }
+
     private Characters() {
     }
 

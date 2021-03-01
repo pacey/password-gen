@@ -31,8 +31,6 @@ class SimilarityChecker implements PasswordChecker {
 
         var similarCharacters = Characters.similar();
         for (char[] similarArray : similarCharacters) {
-
-            Arrays.sort(similarArray);
             // Check if the proposed character appears in the similar
             if (Arrays.binarySearch(similarArray, character) > -1) {
                 var windowTail = buffer.substring(Math.max(0, buffer.length() - windowSize));
