@@ -3,6 +3,7 @@ package com.github.pacey.passwordgen;
 import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import static com.github.pacey.passwordgen.Characters.alphabetic;
 import static com.github.pacey.passwordgen.Characters.alphabeticUppercase;
@@ -10,6 +11,9 @@ import static com.github.pacey.passwordgen.Characters.combine;
 import static com.github.pacey.passwordgen.Characters.numeric;
 import static com.github.pacey.passwordgen.Characters.symbolic;
 
+/**
+ * A basic configurable password generator.
+ */
 public class PasswordGenerator {
 
     private final Random random;
@@ -18,10 +22,21 @@ public class PasswordGenerator {
     private final RepetitionChecker repetitionChecker;
     private final Configuration configuration;
 
+    /**
+     * Creates a new instance of a password generator.
+     *
+     * @param configuration Configuration for the generator.
+     */
     public PasswordGenerator(Configuration configuration) {
         this(configuration, new Random());
     }
 
+    /**
+     * Creates a new instance of a password generator.
+     *
+     * @param configuration Configuration for the generator.
+     * @param random        Random instance, mainly used for testing/repeatable results.
+     */
     public PasswordGenerator(Configuration configuration, Random random) {
         this.configuration = configuration;
         var totalWeight = 0F;
@@ -41,6 +56,11 @@ public class PasswordGenerator {
         this.random = random;
     }
 
+    /**
+     * Generates a new password based on the generators configuration.
+     *
+     * @return String representation of the password.
+     */
     public String generate() {
 
         StringBuffer passwordBuffer = new StringBuffer(configuration.getLength());
@@ -50,6 +70,16 @@ public class PasswordGenerator {
         }
 
         return passwordBuffer.toString();
+    }
+
+    /**
+     * Creates a new infinite stream which is capable of generating passwords based on the generators configuration.
+     *
+     * @return Stream of string passwords.
+     */
+    public Stream<String> stream() {
+
+        return Stream.generate(this::generate);
     }
 
     private char generateNextCharacter(StringBuffer currentPassword, char[] chars) {

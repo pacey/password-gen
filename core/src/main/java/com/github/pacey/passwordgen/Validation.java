@@ -5,19 +5,48 @@ import lombok.NonNull;
 import java.util.Collection;
 import java.util.Objects;
 
-public class Validation {
+/**
+ * Helper class for performing validation.
+ */
+class Validation {
 
+    /**
+     * Creates a new instance. Has been made private to hide the default constructor.
+     */
     private Validation() {
     }
 
-    public static <T> T requireDefined(T fieldValue, String fieldName) {
+    /**
+     * Require the given field to not be null.
+     *
+     * @param fieldValue Field value.
+     * @param fieldName  Field name, used for formatting exceptions.
+     * @param <T>        Type of the field.
+     *
+     * @return Field value, should the validation pass.
+     * @throws IllegalArgumentException should the validation fail.
+     */
+    static <T> T requireDefined(T fieldValue, String fieldName) {
         if (fieldValue == null) {
             throw new IllegalArgumentException(fieldName + " cannot be left undefined.");
         }
         return fieldValue;
     }
 
-    public static <T extends Comparable<T>> T requireRange(
+    /**
+     * Require the given field to be in a particular range.
+     *
+     * @param fieldValue   Field value.
+     * @param fieldName    Field name, used for formatting exceptions.
+     * @param minInclusive Minimum (inclusive) value the field can have.
+     * @param maxInclusive Maximum (inclusive) value the field can have.
+     * @param requirement  Requirement of the field to be mandatory or optional.
+     * @param <T>          Type of the field.
+     *
+     * @return Field value, should the validation pass.
+     * @throws IllegalArgumentException should the validation fail.
+     */
+    static <T extends Comparable<T>> T requireRange(
         T fieldValue,
         @NonNull String fieldName,
         T minInclusive,
@@ -48,6 +77,17 @@ public class Validation {
         return fieldValue;
     }
 
+    /**
+     * Require the given field to not be empty.
+     *
+     * @param fieldValue  Field value.
+     * @param fieldName   Field name, used for formatting exceptions.
+     * @param requirement Requirement of the field to be mandatory or optional.
+     * @param <C>         Type of the collection.
+     *
+     * @return Field value, should the validation pass.
+     * @throws IllegalArgumentException should the validation fail.
+     */
     public static <C extends Collection<?>> C requireNonEmpty(C fieldValue, String fieldName, FieldRequirement requirement) {
         Objects.requireNonNull(fieldName);
         Objects.requireNonNull(requirement);
@@ -62,6 +102,9 @@ public class Validation {
         }
     }
 
+    /**
+     * Requirement of the field being validated.
+     */
     public enum FieldRequirement {
 
         /** The field has to have a defined value and must be considered invalid if left undefined. */

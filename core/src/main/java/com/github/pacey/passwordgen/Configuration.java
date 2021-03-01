@@ -8,6 +8,9 @@ import lombok.ToString;
 import static com.github.pacey.passwordgen.Validation.FieldRequirement.MANDATORY;
 import static com.github.pacey.passwordgen.Validation.requireRange;
 
+/**
+ * Configuration for password generation.
+ */
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -31,6 +34,18 @@ public class Configuration {
     @Builder.Default
     private Float symbolicWeight = .5F;
 
+    /**
+     * Creates a new configuration.
+     *
+     * @param length           Length of the password, between 1 and 64 characters.
+     * @param alphabetic       Whether to include alphabetic (a-z) characters.
+     * @param alphabeticWeight Weight given to alphabetic characters between .1 and 1, against {@link #numericWeight} and {@link #symbolicWeight}.
+     * @param includeUppercase Whether to include uppercase (A-Z) characters.
+     * @param numeric          Whether to include numeric (0-9) characters.
+     * @param numericWeight    Weight given to numeric characters between .1 and 1, against {@link #alphabeticWeight} and {@link #symbolicWeight}.
+     * @param symbolic         Whether to include symbolic (!&% etc.) characters.
+     * @param symbolicWeight   Weight given to symbolic characters between .1 and 1, against {@link #alphabeticWeight} and {@link #numericWeight}.
+     */
     public Configuration(
         Integer length,
         boolean alphabetic,

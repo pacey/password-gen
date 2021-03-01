@@ -2,7 +2,10 @@ package com.github.pacey.passwordgen;
 
 import java.util.Arrays;
 
-public class Characters {
+/**
+ * Helper class to store different character classes and some basic utility methods.
+ */
+class Characters {
 
     private static final char[] alphabetic = "abcdefghijklmnopqrstuvwxyz".toCharArray();
     private static final char[] alphabeticUppercase = "abcdefghijklmnopqrstuvwxyz".toUpperCase().toCharArray();
@@ -12,23 +15,51 @@ public class Characters {
     private Characters() {
     }
 
-    public static char[] alphabetic() {
-        return alphabetic;
+    /**
+     * Static factory to reference alphabetic characters.
+     *
+     * @return char array of alphabetic characters.
+     */
+    static char[] alphabetic() {
+        return alphabetic.clone();
     }
 
-    public static char[] alphabeticUppercase() {
-        return alphabeticUppercase;
+    /**
+     * Static factory to reference alphabetic uppercase characters.
+     *
+     * @return char array of alphabetic uppercase characters.
+     */
+    static char[] alphabeticUppercase() {
+        return alphabeticUppercase.clone();
     }
 
-    public static char[] numeric() {
-        return numeric;
+    /**
+     * Static factory to reference numeric characters.
+     *
+     * @return char array of numeric characters.
+     */
+    static char[] numeric() {
+        return numeric.clone();
     }
 
-    public static char[] symbolic() {
-        return symbolic;
+    /**
+     * Static factory to reference symbolic characters.
+     *
+     * @return char array of symbolic characters.
+     */
+    static char[] symbolic() {
+        return symbolic.clone();
     }
 
-    public static char[] combine(char[] first, char[] second) {
+    /**
+     * Combines the two arrays into a new third array, leaving the supplied arrays untouched.
+     *
+     * @param first  First array.
+     * @param second Second array.
+     *
+     * @return Third array containing all elements from the first and second.
+     */
+    static char[] combine(char[] first, char[] second) {
 
         char[] combined = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, combined, first.length, second.length);
