@@ -1,0 +1,8 @@
+micronaut:
+  application:
+    name: password-gen-api
+  metrics:
+    enabled: true
+endpoints:
+  prometheus:
+    sensitive: false

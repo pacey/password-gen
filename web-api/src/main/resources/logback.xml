@@ -1,0 +1,34 @@
+<configuration>
+
+    <!-- Silence non-ERROR logs from all packages by default -->
+    <logger name="io" level="error"/>
+    <logger name="com" level="error"/>
+    <logger name="org" level="error"/>
+    <logger name="reactor" level="error"/>
+    <logger name="ch" level="error"/>
+
+    <!-- Expose application startup time log message from Micronaut -->
+    <logger name="io.micronaut.runtime.Micronaut" level="info"/>
+
+    <!-- Expose all logs from our own classes -->
+    <logger name="com.github.pacey" level="debug"/>
+
+    <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <fieldNames>
+                <timestamp>time</timestamp>
+                <version>[ignore]</version>
+                <thread>thread</thread>
+                <logger>logger</logger>
+                <level>severity</level>
+                <levelValue>[ignore]</levelValue>
+            </fieldNames>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="json"/>
+    </root>
+</configuration>

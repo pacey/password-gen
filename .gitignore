@@ -1,0 +1,10 @@
+build/
+.gradle/
+
+.idea/
+!.idea/dictionaries/
+!.idea/runConfigurations/
+!.idea/compiler.xml
+!.idea/gradle.xml
+!.idea/jarRepositories.xml
+!.idea/vcs.xml

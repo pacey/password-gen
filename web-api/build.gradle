@@ -1,0 +1,76 @@
+plugins {
+    id('com.github.johnrengelman.shadow') version '6.1.0'
+    id('io.micronaut.application') version '1.3.4'
+    id('com.google.cloud.tools.jib') version '2.8.0'
+}
+
+micronaut {
+    runtime('netty')
+    testRuntime('junit5')
+    processing {
+        incremental(true)
+        annotations('com.github.pacey.passwordgen.*')
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor('org.projectlombok:lombok')
+
+    compileOnly('org.projectlombok:lombok')
+
+    implementation(
+        'io.micronaut:micronaut-validation',
+        'io.micronaut:micronaut-runtime',
+        'io.micronaut:micronaut-management',
+        'io.micronaut.micrometer:micronaut-micrometer-core',
+        'io.micronaut.micrometer:micronaut-micrometer-registry-prometheus',
+        'io.micronaut.elasticsearch:micronaut-elasticsearch',
+        'io.micronaut:micronaut-http-client',
+        'javax.annotation:javax.annotation-api',
+        'net.logstash.logback:logstash-logback-encoder:6.6',
+        project(':core')
+    )
+
+    runtimeOnly('ch.qos.logback:logback-classic')
+
+    testAnnotationProcessor('org.projectlombok:lombok')
+
+    testCompileOnly('org.projectlombok:lombok')
+
+    testImplementation(
+        'org.assertj:assertj-core',
+        'org.awaitility:awaitility:4.0.3',
+        'org.junit.jupiter:junit-jupiter-params'
+    )
+
+}
+
+group 'com.github.pacey.passwordgen'
+version '1.0-SNAPSHOT'
+
+application {
+    mainClass.set('com.github.pacey.passwordgen.Application')
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion('15')
+    targetCompatibility = JavaVersion.toVersion('15')
+}
+
+jib {
+    from {
+        image = 'openjdk:15-slim'
+    }
+    to {
+        image = 'password-gen-api:latest'
+    }
+    container {
+        ports = ['8080']
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+    }
+}

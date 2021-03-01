@@ -1,0 +1,15 @@
+GET http://localhost:8080/health
+
+###
+
+GET http://localhost:8080/metrics
+
+###
+
+GET http://localhost:8080/metrics/password.generate
+
+###
+
+GET http://localhost:8080/prometheus
+
+###

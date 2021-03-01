@@ -1,0 +1,11 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    orgId: 1
+    uid: 079987cf-9861-42de-8b70-38f7e8720ae3
+    url: http://prometheus:9090
+    isDefault: true
+    version: 1
+    editable: false

@@ -1,0 +1,4 @@
+rootProject.name = 'password-gen'
+include 'web-api'
+include 'core'
+
