@@ -11,6 +11,12 @@ class Characters {
     private static final char[] alphabeticUppercase = "abcdefghijklmnopqrstuvwxyz".toUpperCase().toCharArray();
     private static final char[] numeric = "0123456789".toCharArray();
     private static final char[] symbolic = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~".toCharArray();
+    private static final char[][] similar = new char[][]{
+        "1iIL!|".toCharArray(),
+        "0OQ".toCharArray(),
+        "nm".toCharArray(),
+        "NM".toCharArray()
+    };
 
     private Characters() {
     }
@@ -49,6 +55,15 @@ class Characters {
      */
     static char[] symbolic() {
         return symbolic.clone();
+    }
+
+    /**
+     * Static factory to reference similar characters.
+     *
+     * @return Two dimensional char array of similar characters.
+     */
+    static char[][] similar() {
+        return similar.clone();
     }
 
     /**

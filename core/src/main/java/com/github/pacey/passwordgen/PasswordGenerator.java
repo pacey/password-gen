@@ -1,5 +1,6 @@
 package com.github.pacey.passwordgen;
 
+import java.util.ArrayList;
 import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
@@ -19,7 +20,7 @@ public class PasswordGenerator {
     private final Random random;
     private final NavigableMap<Float, char[]> weightedCharacters = new TreeMap<>();
     private final Float totalWeight;
-    private final RepetitionChecker repetitionChecker;
+    private final PasswordChecker compositeChecker;
     private final Configuration configuration;
 
     /**
@@ -52,8 +53,24 @@ public class PasswordGenerator {
             this.weightedCharacters.put(totalWeight += configuration.getSymbolicWeight(), symbolic());
         }
         this.totalWeight = totalWeight;
-        this.repetitionChecker = new RepetitionChecker(3);
+        compositeChecker = createPasswordChecker(configuration);
         this.random = random;
+    }
+
+    private static PasswordChecker createPasswordChecker(Configuration configuration) {
+
+        var passwordCheckers = new ArrayList<PasswordChecker>();
+        if (configuration.isAvoidRepetition()) {
+            passwordCheckers.add(new RepetitionChecker(3));
+        }
+        if (configuration.isAvoidSimilar()) {
+            passwordCheckers.add(new SimilarityChecker(3));
+        }
+
+        return passwordCheckers.isEmpty()
+            ? null
+            : new CompositePasswordChecker(passwordCheckers);
+
     }
 
     /**
@@ -83,11 +100,15 @@ public class PasswordGenerator {
     }
 
     private char generateNextCharacter(StringBuffer currentPassword, char[] chars) {
-        char nextCharacter;
-        do {
-            nextCharacter = randomCharacterFrom(chars);
-        } while (repetitionChecker.contains(currentPassword, nextCharacter));
+        char nextCharacter = randomCharacterFrom(chars);
 
+        if (compositeChecker == null) {
+            return nextCharacter;
+        }
+
+        while (compositeChecker.check(currentPassword, nextCharacter)) {
+            nextCharacter = randomCharacterFrom(chars);
+        }
         return nextCharacter;
     }
 

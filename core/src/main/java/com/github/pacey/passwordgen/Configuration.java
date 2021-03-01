@@ -33,6 +33,10 @@ public class Configuration {
     private boolean symbolic = true;
     @Builder.Default
     private Float symbolicWeight = .5F;
+    @Builder.Default
+    private boolean avoidRepetition = true;
+    @Builder.Default
+    private boolean avoidSimilar = true;
 
     /**
      * Creates a new configuration.
@@ -45,6 +49,8 @@ public class Configuration {
      * @param numericWeight    Weight given to numeric characters between .1 and 1, against {@link #alphabeticWeight} and {@link #symbolicWeight}.
      * @param symbolic         Whether to include symbolic (!&% etc.) characters.
      * @param symbolicWeight   Weight given to symbolic characters between .1 and 1, against {@link #alphabeticWeight} and {@link #numericWeight}.
+     * @param avoidRepetition  Prevents the same characters from appearing near each other.
+     * @param avoidSimilar     Prevents similar characters from appearing near each other.
      */
     public Configuration(
         Integer length,
@@ -54,7 +60,9 @@ public class Configuration {
         boolean numeric,
         Float numericWeight,
         boolean symbolic,
-        Float symbolicWeight
+        Float symbolicWeight,
+        boolean avoidRepetition,
+        boolean avoidSimilar
     ) {
         this.length = requireRange(length, "length", 1, 64, MANDATORY);
         this.alphabetic = alphabetic;
@@ -64,5 +72,7 @@ public class Configuration {
         this.numericWeight = requireRange(numericWeight, "numericWeight", 0.1F, 1.0F, MANDATORY);
         this.symbolic = symbolic;
         this.symbolicWeight = requireRange(symbolicWeight, "symbolicWeight", 0.1F, 1.0F, MANDATORY);
+        this.avoidRepetition = avoidRepetition;
+        this.avoidSimilar = avoidSimilar;
     }
 }

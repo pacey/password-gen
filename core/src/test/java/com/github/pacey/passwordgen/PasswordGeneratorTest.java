@@ -75,7 +75,7 @@ class PasswordGeneratorTest {
 
         var password = passwordGenerator.generate();
 
-        assertThat(password).isEqualTo("6JW{B\"j4)<1L45 (");
+        assertThat(password).isEqualTo("6JW{B\"j4)<1e5 (~");
     }
 
     @Test

@@ -14,7 +14,7 @@ class RepetitionCheckerTest {
     @MethodSource("containsCharacterInBufferWindowArguments")
     void containsCharacterInBufferWindow(StringBuffer buffer, char character, int windowSize, boolean expected) {
 
-        var actual = new RepetitionChecker(windowSize).contains(buffer, character);
+        var actual = new RepetitionChecker(windowSize).check(buffer, character);
 
         assertThat(actual).isEqualTo(expected);
     }

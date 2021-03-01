@@ -3,7 +3,7 @@ package com.github.pacey.passwordgen;
 /**
  * Class which can check if a character has been repeated in a configurable window.
  */
-class RepetitionChecker {
+class RepetitionChecker implements PasswordChecker {
 
     private final int windowSize;
 
@@ -24,7 +24,8 @@ class RepetitionChecker {
      *
      * @return {@code true} if the character was found in the string buffer window, otherwise {@code false}.
      */
-    boolean contains(StringBuffer buffer, char character) {
+    @Override
+    public boolean check(StringBuffer buffer, char character) {
 
         var tailWindow = buffer.substring(Math.max(buffer.length() - windowSize, 0));
 
