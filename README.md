@@ -1,3 +1,5 @@
+![main workflow](https://github.com/pacey/password-gen/actions/workflows/build_and_test.yml/badge.svg)
+
 # Password Generator
 
 ## Modules
