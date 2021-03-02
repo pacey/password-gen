@@ -5,8 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import static com.github.pacey.passwordgen.Validation.FieldRequirement.MANDATORY;
-import static com.github.pacey.passwordgen.Validation.requireRange;
+import static com.github.pacey.passwordgen.validation.FieldRequirement.MANDATORY;
+import static com.github.pacey.passwordgen.validation.Validation.requireRange;
 
 /**
  * Configuration for password generation.

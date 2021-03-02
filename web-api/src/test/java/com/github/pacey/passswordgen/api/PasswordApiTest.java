@@ -6,6 +6,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @MicronautTest
 @TestInstance(PER_CLASS)
+@DisplayName("PasswordApi Tests")
 class PasswordApiTest {
 
     @Inject
@@ -29,6 +31,7 @@ class PasswordApiTest {
     }
 
     @Test
+    @DisplayName("Generates a strong password")
     void generatesAStrongPassword() {
 
         var password = httpClient.retrieve(HttpRequest.GET("/api/password/strong"), String.class);
@@ -38,6 +41,7 @@ class PasswordApiTest {
     }
 
     @Test
+    @DisplayName("Supports configuration by query string parameters")
     void supportsConfiguration() {
 
         var password = httpClient.retrieve(HttpRequest.GET("/api/password?length=64"), String.class);

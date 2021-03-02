@@ -1,5 +1,6 @@
-package com.github.pacey.passwordgen;
+package com.github.pacey.passwordgen.rule;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -8,13 +9,15 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RepetitionCheckerTest {
+@DisplayName("RepetitionRule Tests")
+class RepetitionRuleTest {
 
     @ParameterizedTest(name = "Last {2} characters of ''{0}'' contains ''{1}'' is {3}")
     @MethodSource("containsCharacterInBufferWindowArguments")
+    @DisplayName("violates")
     void containsCharacterInBufferWindow(StringBuffer buffer, char character, int windowSize, boolean expected) {
 
-        var actual = new RepetitionChecker(windowSize).check(buffer, character);
+        var actual = new RepetitionRule(windowSize).violates(buffer, character);
 
         assertThat(actual).isEqualTo(expected);
     }

@@ -1,5 +1,6 @@
-package com.github.pacey.passwordgen;
+package com.github.pacey.passwordgen.rule;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -8,13 +9,15 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SimilarityCheckerTest {
+@DisplayName("SimilarityRule Tests")
+class SimilarityRuleTest {
 
     @ParameterizedTest(name = "Last {2} characters of ''{0}'' similar to ''{1}'' is {3}")
     @MethodSource("containsSimilarCharacterInBufferWindowArguments")
+    @DisplayName("violates")
     void containsSimilarCharacterInBufferWindow(StringBuffer buffer, char character, int windowSize, boolean expected) {
 
-        var actual = new SimilarityChecker(windowSize).check(buffer, character);
+        var actual = new SimilarityRule(windowSize).violates(buffer, character);
 
         assertThat(actual).isEqualTo(expected);
     }

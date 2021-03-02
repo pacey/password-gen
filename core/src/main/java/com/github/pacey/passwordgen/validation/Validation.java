@@ -1,4 +1,4 @@
-package com.github.pacey.passwordgen;
+package com.github.pacey.passwordgen.validation;
 
 import lombok.NonNull;
 
@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Helper class for performing validation.
  */
-class Validation {
+public class Validation {
 
     /**
      * Creates a new instance. Has been made private to hide the default constructor.
@@ -26,7 +26,7 @@ class Validation {
      * @return Field value, should the validation pass.
      * @throws IllegalArgumentException should the validation fail.
      */
-    static <T> T requireDefined(T fieldValue, String fieldName) {
+    public static <T> T requireDefined(T fieldValue, String fieldName) {
         if (fieldValue == null) {
             throw new IllegalArgumentException(fieldName + " cannot be left undefined.");
         }
@@ -46,7 +46,7 @@ class Validation {
      * @return Field value, should the validation pass.
      * @throws IllegalArgumentException should the validation fail.
      */
-    static <T extends Comparable<T>> T requireRange(
+    public static <T extends Comparable<T>> T requireRange(
         T fieldValue,
         @NonNull String fieldName,
         T minInclusive,
@@ -102,15 +102,4 @@ class Validation {
         }
     }
 
-    /**
-     * Requirement of the field being validated.
-     */
-    public enum FieldRequirement {
-
-        /** The field has to have a defined value and must be considered invalid if left undefined. */
-        MANDATORY,
-
-        /** The field is optional and will be validated only if it has a defined value. Undefined fields will be considered valid. */
-        OPTIONAL
-    }
 }

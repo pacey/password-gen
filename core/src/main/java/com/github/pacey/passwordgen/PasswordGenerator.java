@@ -1,26 +1,26 @@
 package com.github.pacey.passwordgen;
 
-import java.util.ArrayList;
-import java.util.NavigableMap;
-import java.util.Random;
-import java.util.TreeMap;
-import java.util.stream.Stream;
+import com.github.pacey.passwordgen.rule.CompositePasswordRule;
+import com.github.pacey.passwordgen.rule.PasswordRule;
+import com.github.pacey.passwordgen.rule.RepetitionRule;
+import com.github.pacey.passwordgen.rule.SimilarityRule;
 
-import static com.github.pacey.passwordgen.Characters.alphabetic;
-import static com.github.pacey.passwordgen.Characters.alphabeticUppercase;
-import static com.github.pacey.passwordgen.Characters.combine;
-import static com.github.pacey.passwordgen.Characters.numeric;
-import static com.github.pacey.passwordgen.Characters.symbolic;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.Stream;
 
 /**
  * A basic configurable password generator.
  */
 public class PasswordGenerator {
 
-    private final Random random;
-    private final NavigableMap<Float, char[]> weightedCharacters = new TreeMap<>();
-    private final Float totalWeight;
-    private final PasswordChecker compositeChecker;
+    private static final String alphabetic = "abcdefghijklmnopqrstuvwxyz";
+    private static final String alphabeticUppercase = alphabetic.toUpperCase();
+    private static final String numeric = "0123456789";
+    private static final String symbolic = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+    private final CharacterRandomizer characterRandomizer;
+    private final PasswordRule compositeChecker;
     private final Configuration configuration;
 
     /**
@@ -40,36 +40,41 @@ public class PasswordGenerator {
      */
     public PasswordGenerator(Configuration configuration, Random random) {
         this.configuration = configuration;
-        var totalWeight = 0F;
-        if (configuration.isAlphabetic() && configuration.isIncludeUppercase()) {
-            this.weightedCharacters.put(totalWeight += configuration.getAlphabeticWeight(), combine(alphabetic(), alphabeticUppercase()));
-        } else if (configuration.isAlphabetic()) {
-            this.weightedCharacters.put(totalWeight += configuration.getAlphabeticWeight(), alphabetic());
-        }
-        if (configuration.isNumeric()) {
-            this.weightedCharacters.put(totalWeight += configuration.getNumericWeight(), numeric());
-        }
-        if (configuration.isSymbolic()) {
-            this.weightedCharacters.put(totalWeight += configuration.getSymbolicWeight(), symbolic());
-        }
-        this.totalWeight = totalWeight;
-        compositeChecker = createPasswordChecker(configuration);
-        this.random = random;
+        this.characterRandomizer = createCharacterRandomizer(configuration, random);
+        this.compositeChecker = createPasswordChecker(configuration);
     }
 
-    private static PasswordChecker createPasswordChecker(Configuration configuration) {
+    private static CharacterRandomizer createCharacterRandomizer(Configuration configuration, Random random) {
+        CharacterRandomizer characterRandomizer = new CharacterRandomizer(random);
 
-        var passwordCheckers = new ArrayList<PasswordChecker>();
+        if (configuration.isAlphabetic() && configuration.isIncludeUppercase()) {
+            characterRandomizer.add(configuration.getAlphabeticWeight(), alphabetic + alphabeticUppercase);
+        } else if (configuration.isAlphabetic()) {
+            characterRandomizer.add(configuration.getAlphabeticWeight(), alphabetic);
+        }
+        if (configuration.isNumeric()) {
+            characterRandomizer.add(configuration.getNumericWeight(), numeric);
+        }
+        if (configuration.isSymbolic()) {
+            characterRandomizer.add(configuration.getSymbolicWeight(), symbolic);
+        }
+
+        return characterRandomizer;
+    }
+
+    private static PasswordRule createPasswordChecker(Configuration configuration) {
+
+        var passwordCheckers = new ArrayList<PasswordRule>();
         if (configuration.isAvoidRepetition()) {
-            passwordCheckers.add(new RepetitionChecker(3));
+            passwordCheckers.add(new RepetitionRule(3));
         }
         if (configuration.isAvoidSimilar()) {
-            passwordCheckers.add(new SimilarityChecker(3));
+            passwordCheckers.add(new SimilarityRule(1));
         }
 
         return passwordCheckers.isEmpty()
             ? null
-            : new CompositePasswordChecker(passwordCheckers);
+            : new CompositePasswordRule(passwordCheckers);
 
     }
 
@@ -82,8 +87,7 @@ public class PasswordGenerator {
 
         StringBuffer passwordBuffer = new StringBuffer(configuration.getLength());
         for (int index = 0; index < configuration.getLength(); index++) {
-            var chars = weightedCharacters.higherEntry(random.nextFloat() * totalWeight).getValue();
-            passwordBuffer.append(generateNextCharacter(passwordBuffer, chars));
+            passwordBuffer.append(generateNextCharacter(passwordBuffer));
         }
 
         return passwordBuffer.toString();
@@ -95,24 +99,16 @@ public class PasswordGenerator {
      * @return Stream of string passwords.
      */
     public Stream<String> stream() {
-
         return Stream.generate(this::generate);
     }
 
-    private char generateNextCharacter(StringBuffer currentPassword, char[] chars) {
-        char nextCharacter = randomCharacterFrom(chars);
+    private char generateNextCharacter(StringBuffer currentPassword) {
 
-        if (compositeChecker == null) {
-            return nextCharacter;
-        }
+        char nextCharacter;
+        do {
+            nextCharacter = characterRandomizer.next();
+        } while (compositeChecker != null && compositeChecker.violates(currentPassword, nextCharacter));
 
-        while (compositeChecker.check(currentPassword, nextCharacter)) {
-            nextCharacter = randomCharacterFrom(chars);
-        }
         return nextCharacter;
-    }
-
-    private char randomCharacterFrom(char[] chars) {
-        return chars[random.nextInt(chars.length)];
     }
 }

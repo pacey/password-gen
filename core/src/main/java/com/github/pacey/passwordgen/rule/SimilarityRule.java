@@ -1,12 +1,14 @@
-package com.github.pacey.passwordgen;
+package com.github.pacey.passwordgen.rule;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.function.IntPredicate;
 
 /**
  * Class which can check if a character is similar in a configurable window.
  */
-class SimilarityChecker implements PasswordChecker {
+public class SimilarityRule implements PasswordRule {
 
+    private static final Iterable<String> similarCharacters = List.of("1iIL!|", "0OQ", "nm", "NM", ";:", "\"'", "@a", "5S");
     private final int windowSize;
 
     /**
@@ -14,7 +16,7 @@ class SimilarityChecker implements PasswordChecker {
      *
      * @param windowSize Window size to look for similar characters in.
      */
-    SimilarityChecker(int windowSize) {
+    public SimilarityRule(int windowSize) {
         this.windowSize = windowSize;
     }
 
@@ -27,22 +29,22 @@ class SimilarityChecker implements PasswordChecker {
      * @return {@code true} if a similar character was found in the string buffer window, otherwise {@code false}.
      */
     @Override
-    public boolean check(StringBuffer buffer, char character) {
+    public boolean violates(StringBuffer buffer, Character character) {
 
-        var similarCharacters = Characters.similar();
-        for (char[] similarArray : similarCharacters) {
+        for (String similar : similarCharacters) {
             // Check if the proposed character appears in the similar
-            if (Arrays.binarySearch(similarArray, character) > -1) {
+            if (similar.indexOf(character) > -1) {
                 var windowTail = buffer.substring(Math.max(0, buffer.length() - windowSize));
-                for (int index = 0; index < windowTail.length(); index++) {
-                    // Check if the character in the tail also appears in the similar
-                    if (Arrays.binarySearch(similarArray, windowTail.charAt(index)) > -1) {
-                        return true;
-                    }
+                if (similar.chars().anyMatch(in(windowTail))) {
+                    return true;
                 }
             }
         }
 
         return false;
+    }
+
+    private IntPredicate in(String string) {
+        return character -> string.indexOf(character) > -1;
     }
 }

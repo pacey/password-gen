@@ -1,5 +1,6 @@
-package com.github.pacey.passwordgen;
+package com.github.pacey.passwordgen.validation;
 
+import com.github.pacey.passwordgen.validation.FieldRequirement;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -9,14 +10,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.github.pacey.passwordgen.Validation.FieldRequirement.MANDATORY;
-import static com.github.pacey.passwordgen.Validation.FieldRequirement.OPTIONAL;
-import static com.github.pacey.passwordgen.Validation.requireDefined;
-import static com.github.pacey.passwordgen.Validation.requireNonEmpty;
-import static com.github.pacey.passwordgen.Validation.requireRange;
+import static com.github.pacey.passwordgen.validation.FieldRequirement.MANDATORY;
+import static com.github.pacey.passwordgen.validation.FieldRequirement.OPTIONAL;
+import static com.github.pacey.passwordgen.validation.Validation.requireDefined;
+import static com.github.pacey.passwordgen.validation.Validation.requireNonEmpty;
+import static com.github.pacey.passwordgen.validation.Validation.requireRange;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayName("Validation Tests")
 class ValidationTest {
 
     @ParameterizedTest(name = "Validates {0} to not be null, throwing {1}")
@@ -46,7 +48,7 @@ class ValidationTest {
     @ParameterizedTest(name = "Validates {0} to be between {1} and {2} ({3}), throwing {4}")
     @MethodSource("validatesRangeArguments")
     @DisplayName("requireRange")
-    <T extends Comparable<T>> void validatesRange(T fieldValue, T min, T max, Validation.FieldRequirement requirement, Exception expectedException) {
+    <T extends Comparable<T>> void validatesRange(T fieldValue, T min, T max, FieldRequirement requirement, Exception expectedException) {
 
         if (expectedException == null) {
             var actual = requireRange(fieldValue, "test field", min, max, requirement);
@@ -76,7 +78,7 @@ class ValidationTest {
     @ParameterizedTest(name = "Validates {0} to not be empty ({1}), throwing {2}")
     @MethodSource("validatesCollectionNonEmptyArguments")
     @DisplayName("requireNonEmpty")
-    <T extends Collection<?>> void validatesCollectionNonEmpty(T fieldValue, Validation.FieldRequirement requirement, Exception expectedException) {
+    <T extends Collection<?>> void validatesCollectionNonEmpty(T fieldValue, FieldRequirement requirement, Exception expectedException) {
 
         if (expectedException == null) {
             var actual = requireNonEmpty(fieldValue, "test field", requirement);
