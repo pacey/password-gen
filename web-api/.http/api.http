@@ -5,3 +5,7 @@ GET http://localhost:8080/api/password?length=64&alphabetic=true&numeric=true&sy
 GET http://localhost:8080/api/password/strong
 
 ###
+
+GET http://localhost:8080/api/password?length=128
+
+###

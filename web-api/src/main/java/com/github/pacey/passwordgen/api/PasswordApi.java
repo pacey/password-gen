@@ -1,14 +1,14 @@
 package com.github.pacey.passwordgen.api;
 
 import com.github.pacey.passwordgen.Configuration;
+import com.github.pacey.passwordgen.app.provider.DateTimeProvider;
 import com.github.pacey.passwordgen.app.PasswordService;
-import io.micronaut.http.HttpStatus;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.annotation.RequestBean;
-import io.micronaut.http.annotation.Status;
 
 import javax.inject.Inject;
 
@@ -16,24 +16,25 @@ import javax.inject.Inject;
 public class PasswordApi {
 
     private final PasswordService passwordService;
+    private final DateTimeProvider dateTimeProvider;
 
     @Inject
-    public PasswordApi(PasswordService passwordService) {
+    public PasswordApi(PasswordService passwordService, DateTimeProvider dateTimeProvider) {
         this.passwordService = passwordService;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Get
-    @Produces(MediaType.TEXT_PLAIN)
-    @Status(HttpStatus.OK)
-    public String generatePassword(@RequestBean PasswordRequest passwordRequest) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public HttpResponse<PasswordResponse> generatePassword(@RequestBean PasswordRequest passwordRequest) {
 
-        return passwordService.generatePassword(passwordRequest.toConfiguration());
+        var password = passwordService.generatePassword(passwordRequest.toConfiguration());
+        return HttpResponse.ok(new PasswordResponse(password, dateTimeProvider.now()));
     }
 
     @Get("/strong")
-    @Produces(MediaType.TEXT_PLAIN)
-    @Status(HttpStatus.OK)
-    public String generateStrongPassword() {
+    @Produces(MediaType.APPLICATION_JSON)
+    public HttpResponse<PasswordResponse> generateStrongPassword() {
 
         var configuration = Configuration.builder()
             .length(16)
@@ -43,6 +44,7 @@ public class PasswordApi {
             .symbolic(true)
             .build();
 
-        return passwordService.generatePassword(configuration);
+        var password = passwordService.generatePassword(configuration);
+        return HttpResponse.ok(new PasswordResponse(password, dateTimeProvider.now()));
     }
 }

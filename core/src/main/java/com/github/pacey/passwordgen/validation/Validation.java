@@ -24,11 +24,11 @@ public class Validation {
      * @param <T>        Type of the field.
      *
      * @return Field value, should the validation pass.
-     * @throws IllegalArgumentException should the validation fail.
+     * @throws ValidationException should the validation fail.
      */
     public static <T> T requireDefined(T fieldValue, String fieldName) {
         if (fieldValue == null) {
-            throw new IllegalArgumentException(fieldName + " cannot be left undefined.");
+            throw new ValidationException(fieldName + " cannot be left undefined.");
         }
         return fieldValue;
     }
@@ -44,7 +44,7 @@ public class Validation {
      * @param <T>          Type of the field.
      *
      * @return Field value, should the validation pass.
-     * @throws IllegalArgumentException should the validation fail.
+     * @throws ValidationException should the validation fail.
      */
     public static <T extends Comparable<T>> T requireRange(
         T fieldValue,
@@ -55,24 +55,24 @@ public class Validation {
     ) {
         if (fieldValue == null) {
             if (requirement == FieldRequirement.MANDATORY) {
-                throw new IllegalArgumentException(fieldName + " cannot be left undefined.");
+                throw new ValidationException(fieldName + " cannot be left undefined.");
             }
             return null;
         }
         if (minInclusive != null && maxInclusive != null) {
             if (fieldValue.compareTo(minInclusive) < 0 || fieldValue.compareTo(maxInclusive) > 0) {
-                throw new IllegalArgumentException(fieldName + " should fall in range " + minInclusive + "-" + maxInclusive + ".");
+                throw new ValidationException(fieldName + " should fall in range " + minInclusive + "-" + maxInclusive + ".");
             }
         } else if (minInclusive != null) {
             if (fieldValue.compareTo(minInclusive) < 0) {
-                throw new IllegalArgumentException(fieldName + " should be greater than or equal to " + minInclusive + ".");
+                throw new ValidationException(fieldName + " should be greater than or equal to " + minInclusive + ".");
             }
         } else if (maxInclusive != null) {
             if (fieldValue.compareTo(maxInclusive) > 0) {
-                throw new IllegalArgumentException(fieldName + " should be less than or equal to " + maxInclusive + ".");
+                throw new ValidationException(fieldName + " should be less than or equal to " + maxInclusive + ".");
             }
         } else {
-            throw new IllegalArgumentException("Both lower and upper limits on a range validation cannot be null simultaneously.");
+            throw new ValidationException("Both lower and upper limits on a range validation cannot be null simultaneously.");
         }
         return fieldValue;
     }
@@ -86,7 +86,7 @@ public class Validation {
      * @param <C>         Type of the collection.
      *
      * @return Field value, should the validation pass.
-     * @throws IllegalArgumentException should the validation fail.
+     * @throws ValidationException should the validation fail.
      */
     public static <C extends Collection<?>> C requireNonEmpty(C fieldValue, String fieldName, FieldRequirement requirement) {
         Objects.requireNonNull(fieldName);
@@ -94,9 +94,9 @@ public class Validation {
         if (requirement == FieldRequirement.OPTIONAL && fieldValue == null) {
             return null;
         } else if (fieldValue == null) {
-            throw new IllegalArgumentException(fieldName + " cannot be left undefined.");
+            throw new ValidationException(fieldName + " cannot be left undefined.");
         } else if (fieldValue.isEmpty()) {
-            throw new IllegalArgumentException(fieldName + " must not be empty.");
+            throw new ValidationException(fieldName + " must not be empty.");
         } else {
             return fieldValue;
         }

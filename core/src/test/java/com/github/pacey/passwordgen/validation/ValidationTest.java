@@ -1,6 +1,5 @@
 package com.github.pacey.passwordgen.validation;
 
-import com.github.pacey.passwordgen.validation.FieldRequirement;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -41,7 +40,7 @@ class ValidationTest {
         return Stream.of(
             Arguments.of("hello", null),
             Arguments.of(53, null),
-            Arguments.of(null, new IllegalArgumentException("test field cannot be left undefined."))
+            Arguments.of(null, new ValidationException("test field cannot be left undefined."))
         );
     }
 
@@ -63,15 +62,15 @@ class ValidationTest {
     static Stream<Arguments> validatesRangeArguments() {
 
         return Stream.of(
-            Arguments.of(null, 8, 12, MANDATORY, new IllegalArgumentException("test field cannot be left undefined.")),
+            Arguments.of(null, 8, 12, MANDATORY, new ValidationException("test field cannot be left undefined.")),
             Arguments.of(10, 8, 12, MANDATORY, null),
             Arguments.of(10, 8, 12, OPTIONAL, null),
-            Arguments.of(6, 8, 12, MANDATORY, new IllegalArgumentException("test field should fall in range 8-12.")),
-            Arguments.of(14, 8, 12, MANDATORY, new IllegalArgumentException("test field should fall in range 8-12.")),
+            Arguments.of(6, 8, 12, MANDATORY, new ValidationException("test field should fall in range 8-12.")),
+            Arguments.of(14, 8, 12, MANDATORY, new ValidationException("test field should fall in range 8-12.")),
             Arguments.of(10, 8, null, MANDATORY, null),
-            Arguments.of(6, 8, null, MANDATORY, new IllegalArgumentException("test field should be greater than or equal to 8.")),
+            Arguments.of(6, 8, null, MANDATORY, new ValidationException("test field should be greater than or equal to 8.")),
             Arguments.of(6, null, 8, MANDATORY, null),
-            Arguments.of(10, null, 8, MANDATORY, new IllegalArgumentException("test field should be less than or equal to 8."))
+            Arguments.of(10, null, 8, MANDATORY, new ValidationException("test field should be less than or equal to 8."))
         );
     }
 
@@ -93,9 +92,9 @@ class ValidationTest {
     static Stream<Arguments> validatesCollectionNonEmptyArguments() {
 
         return Stream.of(
-            Arguments.of(null, MANDATORY, new IllegalArgumentException("test field cannot be left undefined.")),
+            Arguments.of(null, MANDATORY, new ValidationException("test field cannot be left undefined.")),
             Arguments.of(null, OPTIONAL, null),
-            Arguments.of(List.of(), MANDATORY, new IllegalArgumentException("test field must not be empty.")),
+            Arguments.of(List.of(), MANDATORY, new ValidationException("test field must not be empty.")),
             Arguments.of(List.of(1, 2, 3), MANDATORY, null)
         );
     }
