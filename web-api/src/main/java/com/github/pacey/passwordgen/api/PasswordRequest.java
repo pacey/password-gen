@@ -3,6 +3,7 @@ package com.github.pacey.passwordgen.api;
 import com.github.pacey.passwordgen.Configuration;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.QueryValue;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Value;
 
 import javax.annotation.Nullable;
@@ -14,33 +15,43 @@ class PasswordRequest {
 
     @Nullable
     @QueryValue
+    @Parameter(description = "Length of the password, between 1 and 64 characters.")
     Integer length;
     @Nullable
     @QueryValue
+    @Parameter(description = "Whether to include alphabetic (a-z) characters.")
     Boolean alphabetic;
     @Nullable
     @QueryValue
+    @Parameter(description = "Whether to include uppercase (A-Z) characters.")
     Boolean includeUppercase;
     @Nullable
     @QueryValue
+    @Parameter(description = "Weight given to alphabetic characters between .1 and 1.")
     Float alphabeticWeight;
     @Nullable
     @QueryValue
+    @Parameter(description = "Whether to include numeric (0-9) characters.")
     Boolean numeric;
     @Nullable
     @QueryValue
+    @Parameter(description = "Weight given to numeric characters between .1 and 1.")
     Float numericWeight;
     @Nullable
     @QueryValue
+    @Parameter(description = "Whether to include symbolic (!&% etc.) characters.")
     Boolean symbolic;
     @Nullable
     @QueryValue
+    @Parameter(description = "Weight given to symbolic characters between .1 and 1.")
     Float symbolicWeight;
     @Nullable
     @QueryValue
+    @Parameter(description = "Prevents the same characters from appearing near each other.")
     Boolean avoidRepetition;
     @Nullable
     @QueryValue
+    @Parameter(description = "Prevents similar characters (1!I etc.) from appearing near each other.")
     Boolean avoidSimilar;
 
     Optional<Integer> getLength() {

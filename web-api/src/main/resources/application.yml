@@ -3,6 +3,14 @@ micronaut:
     name: password-gen-api
   metrics:
     enabled: true
+  router:
+    static-resources:
+      redoc:
+        paths: classpath:META-INF/swagger/views/redoc
+        mapping: /redoc/**
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
 endpoints:
   prometheus:
     sensitive: false
