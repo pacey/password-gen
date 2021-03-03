@@ -44,7 +44,20 @@ class PasswordApiTest {
     @DisplayName("Supports configuration by query string parameters")
     void supportsConfiguration() {
 
-        var password = httpClient.retrieve(HttpRequest.GET("/api/password?length=64"), String.class);
+        var httpRequest = HttpRequest.GET("/api/password")
+            .uri(uriBuilder -> uriBuilder.queryParam("length", 64)
+                .queryParam("alphabetic", true)
+                .queryParam("includeUppercase", true)
+                .queryParam("alphabeticWeight", 1F)
+                .queryParam("numeric", true)
+                .queryParam("numericWeight", 1F)
+                .queryParam("symbolic", true)
+                .queryParam("symbolicWeight", .5F)
+                .queryParam("avoidRepetition", true)
+                .queryParam("avoidSimilar", true)
+            );
+
+        var password = httpClient.retrieve(httpRequest, String.class);
 
         assertThat(password)
             .hasSize(64);

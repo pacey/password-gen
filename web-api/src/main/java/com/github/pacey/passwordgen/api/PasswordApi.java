@@ -7,12 +7,10 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
-import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.http.annotation.RequestBean;
 import io.micronaut.http.annotation.Status;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.function.Consumer;
 
 @Controller("/api/password")
 public class PasswordApi {
@@ -27,21 +25,9 @@ public class PasswordApi {
     @Get
     @Produces(MediaType.TEXT_PLAIN)
     @Status(HttpStatus.OK)
-    public String generatePassword(
-        @Nullable @QueryValue Integer length,
-        @Nullable @QueryValue Boolean alphabetic,
-        @Nullable @QueryValue Boolean numeric,
-        @Nullable @QueryValue Boolean symbolic
-    ) {
+    public String generatePassword(@RequestBean PasswordRequest passwordRequest) {
 
-        var configurationBuilder = Configuration.builder();
-
-        setIfProvided(length, configurationBuilder::length);
-        setIfProvided(alphabetic, configurationBuilder::alphabetic);
-        setIfProvided(numeric, configurationBuilder::numeric);
-        setIfProvided(symbolic, configurationBuilder::symbolic);
-
-        return passwordService.generatePassword(configurationBuilder.build());
+        return passwordService.generatePassword(passwordRequest.toConfiguration());
     }
 
     @Get("/strong")
@@ -59,12 +45,4 @@ public class PasswordApi {
 
         return passwordService.generatePassword(configuration);
     }
-
-    private static <T> void setIfProvided(T value, Consumer<T> setter) {
-
-        if (value != null) {
-            setter.accept(value);
-        }
-    }
-
 }
