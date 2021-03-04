@@ -1,47 +1,36 @@
 package com.github.pacey.passwordgen;
 
+import com.github.pacey.passwordgen.validation.Validation;
+
+import java.util.List;
 import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
+import static com.github.pacey.passwordgen.validation.FieldRequirement.MANDATORY;
+
 /**
- * Class that can pick random characters from a series of weighted character sequences.
+ * Class that can pick random characters from a series of weighted strings.
  */
 class CharacterRandomizer {
 
     private final Random random;
-    private final NavigableMap<Float, CharSequence> weightedCharSequence = new TreeMap<>();
+    private final NavigableMap<Float, String> weightedStringMap = new TreeMap<>();
     private float totalWeight = 0F;
 
     /**
-     * Creates a nwe instance with a new Random.
-     */
-    CharacterRandomizer() {
-        this(new Random());
-    }
-
-    /**
-     * Creates a new instance with a given Random.
+     * Creates a new instance with a given random and weighted strings.
      *
-     * @param random Random to use.
+     * @param random          Random to use.
+     * @param weightedStrings Weighted strings to randomly selected characters from.
      */
-    CharacterRandomizer(Random random) {
+    CharacterRandomizer(Random random, List<WeightedString> weightedStrings) {
         this.random = random;
-    }
-
-    /**
-     * Add a new character sequence with the given weight.
-     *
-     * @param weight       Weight to apply to character sequence.
-     * @param charSequence Character sequence.
-     *
-     * @return Instance of {@link this} to allow method chaining.
-     */
-    CharacterRandomizer add(float weight, CharSequence charSequence) {
-
-        weightedCharSequence.put(totalWeight += weight, charSequence);
-        return this;
+        Validation.requireNonEmpty(weightedStrings, "weighted strings", MANDATORY);
+        for (WeightedString weightedString : weightedStrings) {
+            weightedStringMap.put(totalWeight += weightedString.getWeight(), weightedString.getString());
+        }
     }
 
     /**
@@ -59,8 +48,7 @@ class CharacterRandomizer {
      * @return Random character.
      */
     Character next() {
-
-        var characters = weightedCharSequence.higherEntry(random.nextFloat() * totalWeight).getValue();
+        var characters = weightedStringMap.higherEntry(random.nextFloat() * totalWeight).getValue();
         return characters.charAt(random.nextInt(characters.length()));
     }
 }

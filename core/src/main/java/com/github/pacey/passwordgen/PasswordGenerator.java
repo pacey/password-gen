@@ -45,22 +45,23 @@ public class PasswordGenerator {
     }
 
     private static CharacterRandomizer createCharacterRandomizer(Configuration configuration, Random random) {
-        CharacterRandomizer characterRandomizer = new CharacterRandomizer(random);
+
+        var weightedStrings = new ArrayList<WeightedString>();
 
         if (configuration.isAlphabetic()) {
-            characterRandomizer.add(configuration.getAlphabeticWeight(), alphabetic);
+            weightedStrings.add(new WeightedString(configuration.getAlphabeticWeight(), alphabetic));
         }
         if (configuration.isAlphabetic() && configuration.isUppercase()) {
-            characterRandomizer.add(configuration.getAlphabeticWeight(), alphabeticUppercase);
+            weightedStrings.add(new WeightedString(configuration.getAlphabeticWeight(), alphabeticUppercase));
         }
         if (configuration.isNumeric()) {
-            characterRandomizer.add(configuration.getNumericWeight(), numeric);
+            weightedStrings.add(new WeightedString(configuration.getNumericWeight(), numeric));
         }
         if (configuration.isSymbolic()) {
-            characterRandomizer.add(configuration.getSymbolicWeight(), symbolic);
+            weightedStrings.add(new WeightedString(configuration.getSymbolicWeight(), symbolic));
         }
 
-        return characterRandomizer;
+        return new CharacterRandomizer(random, weightedStrings);
     }
 
     private static PasswordRule createPasswordChecker(Configuration configuration) {

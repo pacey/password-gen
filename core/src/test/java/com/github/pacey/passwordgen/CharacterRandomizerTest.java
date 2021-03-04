@@ -1,14 +1,17 @@
 package com.github.pacey.passwordgen;
 
+import com.github.pacey.passwordgen.validation.ValidationException;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("CharacterRandomizer Tests")
 class CharacterRandomizerTest {
@@ -16,12 +19,22 @@ class CharacterRandomizerTest {
     private final Random random = new Random(46186377);
 
     @Test
+    void throwsExceptionIfNoCharacterSetsHaveBeenAdded() {
+
+        assertThatThrownBy(() -> new CharacterRandomizer(random, List.of()))
+            .isInstanceOf(ValidationException.class)
+            .hasMessage("weighted strings must not be empty.");
+    }
+
+    @Test
     @DisplayName("Can randomize from a single CharSequence")
     void canRandomizeFromASingleCharSequence() {
 
         var charSequence = "abcd";
-        var characterRandomizer = new CharacterRandomizer(random)
-            .add(1F, charSequence);
+        var characterRandomizer = new CharacterRandomizer(
+            random,
+            List.of(new WeightedString(1F, charSequence))
+        );
 
         var characterStream = Stream.generate(characterRandomizer::next)
             .limit(10_000);
@@ -35,9 +48,13 @@ class CharacterRandomizerTest {
     @DisplayName("Weighting can be applied to different CharSequences")
     void weightingCanBeAppliedToDifferentCharSequences() {
 
-        var charSequenceRandomizer = new CharacterRandomizer(random)
-            .add(1F, "abc")
-            .add(2F, "def");
+        var charSequenceRandomizer = new CharacterRandomizer(
+            random,
+            List.of(
+                new WeightedString(1F, "abc"),
+                new WeightedString(2F, "def")
+            )
+        );
 
         var randomString = charSequenceRandomizer.stream()
             .limit(10_000)

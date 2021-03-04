@@ -91,6 +91,7 @@ public class Validation {
     public static <C extends Collection<?>> C requireNonEmpty(C fieldValue, String fieldName, FieldRequirement requirement) {
         Objects.requireNonNull(fieldName);
         Objects.requireNonNull(requirement);
+
         if (requirement == FieldRequirement.OPTIONAL && fieldValue == null) {
             return null;
         } else if (fieldValue == null) {
@@ -102,4 +103,19 @@ public class Validation {
         }
     }
 
+    public static String requireNonBlank(String fieldValue, String fieldName, FieldRequirement requirement) {
+        Objects.requireNonNull(fieldName);
+        Objects.requireNonNull(requirement);
+
+        if (requirement == FieldRequirement.OPTIONAL && fieldValue == null) {
+            return null;
+        } else if (fieldValue == null) {
+            throw new ValidationException(fieldName + " cannot be left undefined.");
+        } else if (fieldValue.isBlank()) {
+            throw new ValidationException(fieldName + " must not be blank.");
+        } else {
+            return fieldValue;
+        }
+
+    }
 }
