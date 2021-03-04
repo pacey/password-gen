@@ -83,7 +83,7 @@ public class PasswordApi {
         var configuration = Configuration.builder()
             .length(16)
             .alphabetic(true)
-            .includeUppercase(true)
+            .uppercase(true)
             .numeric(true)
             .symbolic(true)
             .build();

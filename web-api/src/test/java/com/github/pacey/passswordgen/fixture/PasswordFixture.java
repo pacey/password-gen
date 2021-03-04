@@ -32,7 +32,7 @@ public class PasswordFixture {
     public static PasswordFixture strong() {
         return new PasswordFixture(
             HttpRequest.GET("/api/password/strong"),
-            HttpResponse.ok(new PasswordResponse("56dc958sv2=eC2'9", FIXED_INSTANT))
+            HttpResponse.ok(new PasswordResponse("H6dc95GsV2ec'9B3", FIXED_INSTANT))
         );
     }
 
@@ -52,7 +52,7 @@ public class PasswordFixture {
                     .queryParam("avoidSimilar", true)
                     .build()
             ),
-            HttpResponse.ok(new PasswordResponse("56dc95gsv2eC'913T(O,PCYwRX2l4emB>gbqY#73H/i6H4d27y5Am,S3[L75b9O{", FIXED_INSTANT))
+            HttpResponse.ok(new PasswordResponse("HOdc95Gsv2ec'9B3t(o0,pCywrx2l4EmB>Gbqy#73h9iEh4dMTyam,sV[l5b9o2w", FIXED_INSTANT))
         );
     }
 

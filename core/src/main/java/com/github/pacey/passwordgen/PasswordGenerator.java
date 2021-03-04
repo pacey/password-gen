@@ -47,10 +47,11 @@ public class PasswordGenerator {
     private static CharacterRandomizer createCharacterRandomizer(Configuration configuration, Random random) {
         CharacterRandomizer characterRandomizer = new CharacterRandomizer(random);
 
-        if (configuration.isAlphabetic() && configuration.isIncludeUppercase()) {
-            characterRandomizer.add(configuration.getAlphabeticWeight(), alphabetic + alphabeticUppercase);
-        } else if (configuration.isAlphabetic()) {
+        if (configuration.isAlphabetic()) {
             characterRandomizer.add(configuration.getAlphabeticWeight(), alphabetic);
+        }
+        if (configuration.isAlphabetic() && configuration.isUppercase()) {
+            characterRandomizer.add(configuration.getAlphabeticWeight(), alphabeticUppercase);
         }
         if (configuration.isNumeric()) {
             characterRandomizer.add(configuration.getNumericWeight(), numeric);

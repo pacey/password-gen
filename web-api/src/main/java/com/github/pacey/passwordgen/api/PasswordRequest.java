@@ -24,7 +24,7 @@ public class PasswordRequest {
     @Nullable
     @QueryValue
     @Parameter(description = "Whether to include uppercase (A-Z) characters.")
-    Boolean includeUppercase;
+    Boolean uppercase;
     @Nullable
     @QueryValue
     @Parameter(description = "Weight given to alphabetic characters between .1 and 1.")
@@ -62,8 +62,8 @@ public class PasswordRequest {
         return Optional.ofNullable(alphabetic);
     }
 
-    Optional<Boolean> getIncludeUppercase() {
-        return Optional.ofNullable(includeUppercase);
+    Optional<Boolean> getUppercase() {
+        return Optional.ofNullable(uppercase);
     }
 
     Optional<Float> getAlphabeticWeight() {
@@ -99,7 +99,7 @@ public class PasswordRequest {
         var configurationBuilder = Configuration.builder();
         getLength().ifPresent(configurationBuilder::length);
         getAlphabetic().ifPresent(configurationBuilder::alphabetic);
-        getIncludeUppercase().ifPresent(configurationBuilder::includeUppercase);
+        getUppercase().ifPresent(configurationBuilder::uppercase);
         getAlphabeticWeight().ifPresent(configurationBuilder::alphabeticWeight);
         getNumeric().ifPresent(configurationBuilder::numeric);
         getNumericWeight().ifPresent(configurationBuilder::numericWeight);

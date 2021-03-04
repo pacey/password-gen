@@ -24,7 +24,7 @@ public class Configuration {
     @Builder.Default
     private Float alphabeticWeight = .5F;
     @Builder.Default
-    private boolean includeUppercase = true;
+    private boolean uppercase = true;
     @Builder.Default
     private boolean numeric = true;
     @Builder.Default
@@ -44,7 +44,7 @@ public class Configuration {
      * @param length           Length of the password, between 1 and 64 characters.
      * @param alphabetic       Whether to include alphabetic (a-z) characters.
      * @param alphabeticWeight Weight given to alphabetic characters between .1 and 1, against {@link #numericWeight} and {@link #symbolicWeight}.
-     * @param includeUppercase Whether to include uppercase (A-Z) characters.
+     * @param uppercase Whether to include uppercase (A-Z) characters.
      * @param numeric          Whether to include numeric (0-9) characters.
      * @param numericWeight    Weight given to numeric characters between .1 and 1, against {@link #alphabeticWeight} and {@link #symbolicWeight}.
      * @param symbolic         Whether to include symbolic (!&% etc.) characters.
@@ -56,7 +56,7 @@ public class Configuration {
         Integer length,
         boolean alphabetic,
         Float alphabeticWeight,
-        boolean includeUppercase,
+        boolean uppercase,
         boolean numeric,
         Float numericWeight,
         boolean symbolic,
@@ -67,7 +67,7 @@ public class Configuration {
         this.length = requireRange(length, "length", 1, 64, MANDATORY);
         this.alphabetic = alphabetic;
         this.alphabeticWeight = requireRange(alphabeticWeight, "alphabeticWeight", 0.1F, 1.0F, MANDATORY);
-        this.includeUppercase = includeUppercase;
+        this.uppercase = uppercase;
         this.numeric = numeric;
         this.numericWeight = requireRange(numericWeight, "numericWeight", 0.1F, 1.0F, MANDATORY);
         this.symbolic = symbolic;
