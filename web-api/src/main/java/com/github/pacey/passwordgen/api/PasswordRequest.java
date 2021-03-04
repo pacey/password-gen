@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Introspected
 @Value
-class PasswordRequest {
+public class PasswordRequest {
 
     @Nullable
     @QueryValue
